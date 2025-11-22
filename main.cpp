@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <unordered_map>
 
 
 std::vector<std::string> split_line(const std::string &line)
@@ -16,7 +17,7 @@ std::vector<std::string> split_line(const std::string &line)
     return tokens;
 }
 
-bool handle_command(const std::vector<std::string> &tokens){
+bool handle_command(const std::vector<std::string> &tokens, std::unordered_map<std::string, std::string> &kv_store){
     if(tokens.empty())
         return true;
     const std::string &cmd=tokens[0];
@@ -45,6 +46,46 @@ bool handle_command(const std::vector<std::string> &tokens){
         return true;
         
     }
+
+    if (cmd == "SET" || cmd =="set"){
+        if(tokens.size()!=3){
+            std::cout<<"ERR usage: SET <key> <value>"<<std::endl;
+            return true;
+        }
+        const std::string &key=tokens[1];
+        const std::string &value=tokens[2];
+
+        kv_store[key]=value;
+        std::cout<<"OK"<<std::endl;
+        return true;
+    }
+
+    if (cmd=="GET"|| cmd=="get"){
+        if(tokens.size()!=2){
+            std::cout<<"ERR usage: GET <key" <<std::endl;
+            return true;
+        }
+        const std::string &key=tokens[1];
+        auto it=kv_store.find(key);
+        if(it==kv_store.end()){
+            std::cout<<"(nil)"<<std::endl;
+        }
+        else{
+            std::cout<<it->second<<std::endl;
+        }
+        return true;
+    }
+
+    if(cmd=="DEL" || cmd=="del"){
+        if(tokens.size()!=2){
+            std::cout<<"ERR usage: DEL <key>"<<std::endl;
+            return true;
+        }
+        const std::string &key=tokens[1];
+        std::size_t erased=kv_store.erase(key);
+        std::cout<<erased<<std::endl;
+        return true;
+    }
     std::cout<<"ERR unknown command: "<< cmd<<std::endl;   
     return true;
 }
@@ -55,6 +96,7 @@ int main()
     std::cout<<"Type 'exit' or 'quit' to stop."<<std::endl;
 
     std::string line;
+    std::unordered_map<std::string,std::string> kv_store;
     while(true){
         std::cout<<"miniredis>";
         if(!std::getline(std::cin,line)){
@@ -62,7 +104,7 @@ int main()
             break;
         }
         std::vector<std::string> tokens=split_line(line);
-        bool keep_running=handle_command(tokens);
+        bool keep_running=handle_command(tokens,kv_store);
         if(!keep_running)
             break;
     }
