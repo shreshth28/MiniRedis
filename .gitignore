@@ -1,0 +1,54 @@
+# Build directories
+/build/
+/build-*/
+out/
+dist/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+
+# Binaries
+*.o
+*.obj
+*.lo
+*.la
+*.a
+*.so
+*.dll
+*.dylib
+*.exe
+miniredis
+
+# macOS junk
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# VSCode
+.vscode/
+.history/
+
+# CLion / JetBrains
+.idea/
+cmake-build-*/
+
+# Logs
+*.log
+
+# Cache
+.cache/
